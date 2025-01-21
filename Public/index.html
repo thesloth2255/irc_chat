@@ -126,7 +126,9 @@
         async function sendMessage() {
             const message = messageInput.value.trim();
             if (message) {
-                const username = "Zhama"; // Replace "Anonymous" with "SlothUser"
+                const username = "Zhama"; 
+
+                console.log("Sending to server:", { username, text: message });
 
                 await fetch('/messages', {
                     method: 'POST',
@@ -144,3 +146,4 @@
     </script>
 </body>
 </html>
+
