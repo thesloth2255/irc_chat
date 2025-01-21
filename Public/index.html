@@ -127,11 +127,15 @@
             const message = messageInput.value.trim();
             if (message) {
                 const now = new Date();
+                // Convert to Eastern Standard Time (EST)
+                const estOffset = -5 * 60 * 60 * 1000; // EST is UTC-5
+                const estTime = new Date(now.getTime() + estOffset);
+
                 const username = [
-                    now.getUTCFullYear(), // Year part, e.g., 1737
-                    now.getUTCMonth() + 1, // Month part (1-12)
-                    now.getUTCDate(), // Day part
-                    now.getUTCHours() * 60 + now.getUTCMinutes() // Minutes since midnight
+                    estTime.getUTCFullYear(), // Year
+                    estTime.getUTCMonth() + 1, // Month (1-12)
+                    estTime.getUTCDate(), // Day
+                    estTime.getUTCHours() * 60 + estTime.getUTCMinutes() // Minutes since midnight
                 ].join(":"); // Format as `1737:4:80:888`
 
                 console.log("Sending to server:", { username, text: message }); // Debug log
@@ -152,3 +156,4 @@
     </script>
 </body>
 </html>
+
