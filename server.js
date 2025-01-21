@@ -56,18 +56,10 @@ app.post('/messages', (req, res) => {
     });
 });
 
-// Delete All Messages (NEW ROUTE)
+// Delete All Messages (Debug Mode)
 app.delete('/messages', (req, res) => {
     console.log('DELETE /messages route called'); // Debug log to confirm the route is being hit
-    db.run('DELETE FROM messages', [], function (err) {
-        if (err) {
-            console.error('Error deleting messages:', err.message);
-            res.status(500).json({ error: 'Failed to delete messages.' });
-        } else {
-            console.log('All messages deleted.');
-            res.status(200).json({ success: true, message: 'All messages deleted.' });
-        }
-    });
+    res.status(200).json({ success: true, message: 'Test DELETE route is working.' }); // Temporary debug response
 });
 
 // Start the Server
