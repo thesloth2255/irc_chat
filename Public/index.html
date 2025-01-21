@@ -109,44 +109,53 @@
         const messagesDiv = document.getElementById("messages");
         const messageInput = document.getElementById("messageInput");
 
+        // Generate the Unix timestamp in the desired format
         function generateTimestampUsername() {
             const now = Date.now();
             const parts = [
-                Math.floor(now / 10000000),
-                Math.floor((now % 10000000) / 100000),
-                Math.floor((now % 100000) / 1000),
-                now % 1000
+                Math.floor(now / 10000000), // First part
+                Math.floor((now % 10000000) / 100000), // Second part
+                Math.floor((now % 100000) / 1000), // Third part
+                now % 1000 // Fourth part
             ];
             return parts.join(":");
         }
 
-        const username = generateTimestampUsername();
+        const username = generateTimestampUsername(); // Generate a unique username at page load
 
         async function loadMessages() {
-            const response = await fetch('/messages');
+            const response = await fetch('/messages'); // Fetch messages from the server
             const messages = await response.json();
-            messagesDiv.innerHTML = '';
+            messagesDiv.innerHTML = ''; // Clear the message container
+
+            // Append each message to the messagesDiv
             messages.forEach(msg => {
                 const messageElem = document.createElement("div");
                 messageElem.textContent = `${msg.username}: ${msg.text}`;
                 messagesDiv.appendChild(messageElem);
             });
+
+            // Scroll to the latest message
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
 
         async function sendMessage() {
             const message = messageInput.value.trim();
             if (message) {
+                // Send the message along with the generated username
                 await fetch('/messages', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, text: message })
                 });
+
+                // Clear the input field and reload messages
                 messageInput.value = '';
                 loadMessages();
             }
         }
 
+        // Load messages every 2 seconds
         setInterval(loadMessages, 2000);
         loadMessages();
     </script>
