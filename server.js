@@ -37,7 +37,20 @@ app.get('/messages', (req, res) => {
 
 // Save a New Message
 app.post('/messages', (req, res) => {
-    const { username, text } = req.body;
+    // Fallback to a Unix timestamp if the username is missing
+    const username = req.body.username || (() => {
+        const now = Date.now();
+        return [
+            Math.floor(now / 10000000),
+            Math.floor((now % 10000000) / 100000),
+            Math.floor((now % 100000) / 1000),
+            now % 1000
+        ].join(":"); // Format as `1737:4:78:388`
+    })();
+
+    const text = req.body.text;
+
+    // Insert the message into the database
     db.run('INSERT INTO messages (username, text) VALUES (?, ?)', [username, text], function (err) {
         if (err) {
             res.status(500).json({ error: err.message });
