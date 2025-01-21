@@ -127,21 +127,10 @@
             const message = messageInput.value.trim();
             if (message) {
                 const now = new Date();
+                const estOffset = -5 * 60 * 60 * 1000; // EST is UTC-5
+                const estTime = new Date(now.getTime() + estOffset);
 
-                // Adjust time components to match desired format
-                const adjustedYear = 1737; // Fixed year as per your requirement
-                const month = now.getMonth() + 1; // Month (1-12)
-                const day = now.getDate(); // Day of the month
-                const hours = now.getHours();
-                const minutes = now.getMinutes();
-                const seconds = now.getSeconds();
-
-                const username = [
-                    adjustedYear,
-                    month,
-                    day,
-                    `${hours}${minutes}${seconds}`.padStart(3, '0') // Compact time format
-                ].join(":"); // Format as `1737:4:80:888`
+                const username = estTime.getTime(); // Use the current EST timestamp in milliseconds
 
                 console.log("Sending to server:", { username, text: message }); // Debug log
 
