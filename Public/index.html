@@ -126,9 +126,15 @@
         async function sendMessage() {
             const message = messageInput.value.trim();
             if (message) {
-                const username = "Zhama"; 
+                const now = Date.now();
+                const username = [
+                    Math.floor(now / 10000000),
+                    Math.floor((now % 10000000) / 100000),
+                    Math.floor((now % 100000) / 1000),
+                    now % 1000
+                ].join(":"); // Format as `1737:4:78:388`
 
-                console.log("Sending to server:", { username, text: message });
+                console.log("Sending to server:", { username, text: message }); // Debug log
 
                 await fetch('/messages', {
                     method: 'POST',
