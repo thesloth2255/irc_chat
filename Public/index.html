@@ -126,7 +126,7 @@
         async function sendMessage() {
             const message = messageInput.value.trim();
             if (message) {
-                const username = Math.floor(Date.now() / 1000); // Accurate 10-digit Unix timestamp in seconds
+                const username = Math.floor(Date.now() / 1000).toString(); // Accurate 10-digit Unix timestamp
 
                 console.log("Sending to server:", { username, text: message }); // Debug log
 
@@ -146,4 +146,5 @@
     </script>
 </body>
 </html>
+
 
