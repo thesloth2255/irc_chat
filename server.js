@@ -4,7 +4,8 @@ const path = require('path');
 const app = express();
 
 const PORT = process.env.PORT || 3000;
-const db = new sqlite3.Database(path.resolve(__dirname, 'messages.db'));
+const dbPath = path.resolve(__dirname, 'messages.db');
+const db = new sqlite3.Database(dbPath);
 
 // Middleware
 app.use(express.json());
@@ -20,7 +21,7 @@ db.serialize(() => {
         if (err) {
             console.error('Error initializing database:', err.message);
         } else {
-            console.log('Database initialized');
+            console.log('Database initialized at:', dbPath);
         }
     });
 });
@@ -37,6 +38,7 @@ app.get('/messages', (req, res) => {
             console.error('Error fetching messages:', err.message);
             res.status(500).json({ error: err.message });
         } else {
+            console.log('Fetched messages:', rows); // Log fetched messages
             res.json(rows);
         }
     });
@@ -61,14 +63,38 @@ app.post('/messages', (req, res) => {
         } else {
             console.log('Message inserted:', { id: this.lastID, username, text });
 
-            // Cleanup old messages (optional)
+            // Cleanup old messages
             db.run('DELETE FROM messages WHERE id NOT IN (SELECT id FROM messages ORDER BY id DESC LIMIT 100)', [], (err) => {
                 if (err) {
                     console.error('Error cleaning up old messages:', err.message);
+                } else {
+                    console.log('Old messages cleaned up');
                 }
             });
 
             res.status(201).json({ id: this.lastID });
+        }
+    });
+});
+
+// Test Message Route
+app.get('/test-message', (req, res) => {
+    const testMessage = { username: 'TestUser', text: 'This is a test message.' };
+
+    db.run('INSERT INTO messages (username, text) VALUES (?, ?)', [testMessage.username, testMessage.text], function (err) {
+        if (err) {
+            console.error('Error inserting test message:', err.message);
+            res.status(500).send('Test insert failed');
+        } else {
+            db.all('SELECT * FROM messages ORDER BY id ASC LIMIT 100', [], (err, rows) => {
+                if (err) {
+                    console.error('Error fetching messages:', err.message);
+                    res.status(500).send('Error fetching messages');
+                } else {
+                    console.log('Database content after test insert:', rows);
+                    res.json(rows);
+                }
+            });
         }
     });
 });
