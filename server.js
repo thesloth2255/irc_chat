@@ -58,6 +58,7 @@ app.post('/messages', (req, res) => {
 
 // Delete All Messages (NEW ROUTE)
 app.delete('/messages', (req, res) => {
+    console.log('DELETE /messages route called'); // Debug log to confirm the route is being hit
     db.run('DELETE FROM messages', [], function (err) {
         if (err) {
             console.error('Error deleting messages:', err.message);
