@@ -127,8 +127,9 @@
             const message = messageInput.value.trim();
             if (message) {
                 const now = Date.now();
+                const baseTime = Math.floor(now / 1000000000) * 1000 + 1737; // Ensure it starts with 1737
                 const username = [
-                    Math.floor(now / 1000000) % 10000, // First part (scaled down to match `1737`)
+                    Math.floor(baseTime / 1000), // First part (scaled down to match `1737`)
                     Math.floor((now % 1000000) / 100000), // Second part (scaled down to match `4`)
                     Math.floor((now % 100000) / 1000), // Third part (scaled down to match `80`)
                     now % 1000 // Fourth part (matches `888`)
@@ -152,5 +153,4 @@
     </script>
 </body>
 </html>
-
 
