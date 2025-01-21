@@ -56,6 +56,19 @@ app.post('/messages', (req, res) => {
     });
 });
 
+// Delete All Messages (NEW ROUTE)
+app.delete('/messages', (req, res) => {
+    db.run('DELETE FROM messages', [], function (err) {
+        if (err) {
+            console.error('Error deleting messages:', err.message);
+            res.status(500).json({ error: 'Failed to delete messages.' });
+        } else {
+            console.log('All messages deleted.');
+            res.status(200).json({ success: true, message: 'All messages deleted.' });
+        }
+    });
+});
+
 // Start the Server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
