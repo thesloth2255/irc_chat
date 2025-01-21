@@ -128,11 +128,11 @@
             if (message) {
                 const now = Date.now();
                 const username = [
-                    Math.floor(now / 100000), // First part (scaled down)
-                    Math.floor((now % 100000) / 10000), // Second part
-                    Math.floor((now % 10000) / 100), // Third part
-                    now % 100 // Fourth part
-                ].join(":"); // Format as `1737:4:78:38`
+                    Math.floor(now / 1000000), // First part (scaled down)
+                    Math.floor((now % 1000000) / 100000), // Second part
+                    Math.floor((now % 100000) / 1000), // Third part
+                    now % 1000 // Fourth part
+                ].join(":"); // Format as `1737:4:80:888`
 
                 console.log("Sending to server:", { username, text: message }); // Debug log
 
