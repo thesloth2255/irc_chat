@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRC Chat</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>IRC Chat</h1>
+    <div id="messages" style="height: 300px; overflow-y: scroll; border: 1px solid #ccc; margin-bottom: 10px;"></div>
+    <input type="text" id="messageInput" placeholder="Type a message">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        const messagesDiv = document.getElementById("messages");
+        const messageInput = document.getElementById("messageInput");
+
+        async function loadMessages() {
+            const response = await fetch('/messages');
+            const messages = await response.json();
+            messagesDiv.innerHTML = '';
+            messages.forEach(msg => {
+                const messageElem = document.createElement("div");
+                messageElem.textContent = `${msg.username}: ${msg.text}`;
+                messagesDiv.appendChild(messageElem);
+            });
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (message) {
+                await fetch('/messages', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: 'Anonymous', text: message })
+                });
+                messageInput.value = '';
+                loadMessages();
+            }
+        }
+
+        // Load messages every 2 seconds
+        setInterval(loadMessages, 2000);
+        loadMessages();
+    </script>
+</body>
+</html>
