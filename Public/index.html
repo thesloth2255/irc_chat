@@ -6,7 +6,6 @@
     <title>Sloth Chat</title>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* Styling remains from the spruced-up Sloth Chat design */
         body {
             font-family: 'Roboto', sans-serif;
             background: linear-gradient(135deg, #DFF6E3, #B0E57C);
@@ -47,7 +46,7 @@
             border-radius: 10px;
             padding: 10px;
             margin-bottom: 15px;
-            height: 300px; /* Retain size for message scrolling */
+            height: 300px;
         }
 
         #input-bar {
@@ -93,7 +92,7 @@
 </head>
 <body>
     <header>
-        <span class="sloth-emoji">🦥</span> Welcome to Sloth Chat <span class="sloth-emoji">🦥</span>
+        <span class="sloth-emoji">🦥</span> Sloth-Chat <span class="sloth-emoji">🦥</span>
     </header>
     <div id="chat-container">
         <div id="messages"></div>
@@ -109,6 +108,19 @@
     <script>
         const messagesDiv = document.getElementById("messages");
         const messageInput = document.getElementById("messageInput");
+
+        function generateTimestampUsername() {
+            const now = Date.now();
+            const parts = [
+                Math.floor(now / 10000000),
+                Math.floor((now % 10000000) / 100000),
+                Math.floor((now % 100000) / 1000),
+                now % 1000
+            ];
+            return parts.join(":");
+        }
+
+        const username = generateTimestampUsername();
 
         async function loadMessages() {
             const response = await fetch('/messages');
@@ -128,17 +140,17 @@
                 await fetch('/messages', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username: 'Anonymous', text: message })
+                    body: JSON.stringify({ username, text: message })
                 });
                 messageInput.value = '';
                 loadMessages();
             }
         }
 
-        // Load messages every 2 seconds
         setInterval(loadMessages, 2000);
         loadMessages();
     </script>
 </body>
 </html>
+
 
