@@ -126,11 +126,7 @@
         async function sendMessage() {
             const message = messageInput.value.trim();
             if (message) {
-                const now = new Date();
-                const estOffset = -5 * 60 * 60 * 1000; // EST is UTC-5
-                const estTime = new Date(now.getTime() + estOffset);
-
-                const username = estTime.getTime(); // Use the current EST timestamp in milliseconds
+                const username = Date.now(); // Accurate Unix timestamp in milliseconds
 
                 console.log("Sending to server:", { username, text: message }); // Debug log
 
